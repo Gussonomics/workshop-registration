@@ -1,70 +1,99 @@
-# Getting Started with Create React App
+# Workshop 3D Printing Registration System
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+ระบบลงทะเบียนสำหรับ Workshop 3D Printing วันเสาร์ที่ 17 มกราคม 2026
 
-## Available Scripts
+## โครงสร้างโปรเจค
 
-In the project directory, you can run:
+```
+workshop-registration/
+├── public/
+│   └── index.html
+├── src/
+│   ├── App.js
+│   └── index.js
+├── .gitignore
+├── package.json
+└── README.md
+```
 
-### `npm start`
+## วิธีติดตั้งและรัน
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 1. ติดตั้ง Dependencies
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```bash
+npm install
+```
 
-### `npm test`
+### 2. รันในโหมดพัฒนา
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+npm start
+```
 
-### `npm run build`
+เปิดเบราว์เซอร์ที่ [http://localhost:3000](http://localhost:3000)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 3. Build สำหรับ Production
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+npm run build
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## วิธี Deploy ขึ้น GitHub Pages
 
-### `npm run eject`
+### 1. แก้ไข package.json
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+เปลี่ยน `YOUR_USERNAME` ใน `homepage` เป็น GitHub username ของคุณ:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```json
+"homepage": "https://YOUR_USERNAME.github.io/workshop-registration"
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### 2. ติดตั้ง gh-pages
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```bash
+npm install gh-pages --save-dev
+```
 
-## Learn More
+### 3. Push โค้ดขึ้น GitHub
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```bash
+git init
+git add .
+git commit -m "Initial commit"
+git branch -M main
+git remote add origin https://github.com/YOUR_USERNAME/workshop-registration.git
+git push -u origin main
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### 4. Deploy
 
-### Code Splitting
+```bash
+npm run deploy
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### 5. ตั้งค่า GitHub Pages
 
-### Analyzing the Bundle Size
+1. ไปที่ Repository Settings
+2. เลือก Pages ทางซ้ายมือ
+3. Source: เลือก `gh-pages` branch
+4. กด Save
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+เว็บไซต์จะพร้อมใช้งานที่: `https://YOUR_USERNAME.github.io/workshop-registration`
 
-### Making a Progressive Web App
+## Features
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- ✅ ฟอร์มลงทะเบียนครบทุกช่อง
+- ✅ ตรวจสอบข้อมูลที่จำเป็น
+- ✅ ตรวจสอบรหัสไปรษณีย์ (5 หลัก)
+- ✅ แสดงรายชื่อผู้ลงทะเบียน
+- ✅ Responsive Design (ใช้งานได้ทั้งมือถือและคอมพิวเตอร์)
 
-### Advanced Configuration
+## เทคโนโลยีที่ใช้
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+- React 18
+- Tailwind CSS
+- Lucide React (Icons)
 
-### Deployment
+## หมายเหตุ
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+ข้อมูลจะถูกเก็บในหน่วยความจำของเบราว์เซอร์เท่านั้น หากต้องการบันทึกข้อมูลถาวรลง Google Sheets จะต้องเพิ่มการเชื่อมต่อ API
