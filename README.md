@@ -94,6 +94,40 @@ npm run deploy
 - Tailwind CSS
 - Lucide React (Icons)
 
+## การเชื่อมต่อกับ Google Sheets
+
+### 1. สร้าง Google Sheet
+
+- สร้าง Google Sheet ใหม่
+- ตั้งหัวตารางในแถวแรก: ชื่อ-นามสกุล, บ้านเลขที่, ซอย, ถนน, แขวง/ตำบล, เขต/อำเภอ, จังหวัด, รหัสไปรษณีย์, วันที่ลงทะเบียน
+
+### 2. สร้าง Google Apps Script
+
+- Extensions → Apps Script
+- วางโค้ดจากไฟล์ `Code.gs`
+- Deploy → New deployment → Web app
+- Execute as: Me
+- Who has access: Anyone
+- คัดลอก Web App URL
+
+### 3. แก้ไขไฟล์ `src/App.js`
+
+แทนที่ `YOUR_WEB_APP_URL_HERE` ด้วย Web App URL ที่คุณได้รับ
+
+```javascript
+const GOOGLE_SCRIPT_URL =
+  "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
+```
+
+### 4. Deploy ใหม่
+
+```bash
+git add .
+git commit -m "Add Google Sheets integration"
+git push
+npm run deploy
+```
+
 ## หมายเหตุ
 
-ข้อมูลจะถูกเก็บในหน่วยความจำของเบราว์เซอร์เท่านั้น หากต้องการบันทึกข้อมูลถาวรลง Google Sheets จะต้องเพิ่มการเชื่อมต่อ API
+ข้อมูลจะถูกบันทึกลง Google Sheets ทันทีเมื่อลงทะเบียน และแสดงผลในหน้าเว็บด้วย

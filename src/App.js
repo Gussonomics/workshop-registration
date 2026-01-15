@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { Calendar, Users, MapPin } from "lucide-react";
 
+// ⚠️ แทนที่ URL นี้ด้วย Web App URL ที่คุณได้จาก Google Apps Script
+const GOOGLE_SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbyBbLt9Vd7fiJqgaYqpn8-IziO4-Rs5D9gZOXZRLp26N-YD4PDvCW0WYPRY5X6nkN0Hmw/exec";
+
 function App() {
   const [formData, setFormData] = useState({
     fullName: "",
@@ -15,6 +19,7 @@ function App() {
 
   const [registrations, setRegistrations] = useState([]);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,7 +29,7 @@ function App() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (
@@ -44,27 +49,49 @@ function App() {
       return;
     }
 
-    const newRegistration = {
-      ...formData,
-      id: Date.now(),
-      registeredAt: new Date().toLocaleString("th-TH"),
-    };
+    setIsSubmitting(true);
 
-    setRegistrations((prev) => [...prev, newRegistration]);
+    try {
+      // ส่งข้อมูลไปยัง Google Sheets
+      const response = await fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
-    setFormData({
-      fullName: "",
-      houseNumber: "",
-      soi: "",
-      road: "",
-      subDistrict: "",
-      district: "",
-      province: "",
-      postCode: "",
-    });
+      // เพิ่มข้อมูลลงในรายการแสดงผล
+      const newRegistration = {
+        ...formData,
+        id: Date.now(),
+        registeredAt: new Date().toLocaleString("th-TH"),
+      };
 
-    setShowSuccess(true);
-    setTimeout(() => setShowSuccess(false), 3000);
+      setRegistrations((prev) => [...prev, newRegistration]);
+
+      // รีเซ็ตฟอร์ม
+      setFormData({
+        fullName: "",
+        houseNumber: "",
+        soi: "",
+        road: "",
+        subDistrict: "",
+        district: "",
+        province: "",
+        postCode: "",
+      });
+
+      // แสดงข้อความสำเร็จ
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3000);
+    } catch (error) {
+      console.error("Error:", error);
+      alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล กรุณาลองใหม่อีกครั้ง");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -87,7 +114,7 @@ function App() {
 
         {showSuccess && (
           <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-6 animate-pulse">
-            ลงทะเบียนสำเร็จ! ขอบคุณที่สมัครเข้าร่วม Workshop
+            ✅ ลงทะเบียนสำเร็จ! ข้อมูลถูกบันทึกลง Google Sheets แล้ว
           </div>
         )}
 
@@ -106,7 +133,8 @@ function App() {
                 name="fullName"
                 value={formData.fullName}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                disabled={isSubmitting}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent disabled:bg-gray-100"
                 placeholder="กรุณากรอกชื่อ-นามสกุล"
               />
             </div>
@@ -121,7 +149,8 @@ function App() {
                   name="houseNumber"
                   value={formData.houseNumber}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  disabled={isSubmitting}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent disabled:bg-gray-100"
                   placeholder="เช่น 123"
                 />
               </div>
@@ -135,7 +164,8 @@ function App() {
                   name="soi"
                   value={formData.soi}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  disabled={isSubmitting}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent disabled:bg-gray-100"
                   placeholder="เช่น ซอยสุขุมวิท 21"
                 />
               </div>
@@ -150,7 +180,8 @@ function App() {
                 name="road"
                 value={formData.road}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                disabled={isSubmitting}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent disabled:bg-gray-100"
                 placeholder="เช่น ถนนสุขุมวิท"
               />
             </div>
@@ -165,7 +196,8 @@ function App() {
                   name="subDistrict"
                   value={formData.subDistrict}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  disabled={isSubmitting}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent disabled:bg-gray-100"
                   placeholder="เช่น คลองเตยเหนือ"
                 />
               </div>
@@ -179,7 +211,8 @@ function App() {
                   name="district"
                   value={formData.district}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  disabled={isSubmitting}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent disabled:bg-gray-100"
                   placeholder="เช่น วัฒนา"
                 />
               </div>
@@ -195,7 +228,8 @@ function App() {
                   name="province"
                   value={formData.province}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  disabled={isSubmitting}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent disabled:bg-gray-100"
                   placeholder="เช่น กรุงเทพมหานคร"
                 />
               </div>
@@ -209,8 +243,9 @@ function App() {
                   name="postCode"
                   value={formData.postCode}
                   onChange={handleChange}
+                  disabled={isSubmitting}
                   maxLength={5}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent disabled:bg-gray-100"
                   placeholder="เช่น 10110"
                 />
               </div>
@@ -218,9 +253,10 @@ function App() {
 
             <button
               onClick={handleSubmit}
-              className="w-full bg-indigo-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-indigo-700 transition-colors shadow-md"
+              disabled={isSubmitting}
+              className="w-full bg-indigo-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-indigo-700 transition-colors shadow-md disabled:bg-gray-400 disabled:cursor-not-allowed"
             >
-              ลงทะเบียน
+              {isSubmitting ? "กำลังบันทึก..." : "ลงทะเบียน"}
             </button>
           </div>
         </div>
