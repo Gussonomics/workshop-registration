@@ -1,0 +1,10 @@
+{
+  "files": {
+    "main.js": "/workshop-registration/static/js/main.7c5ff8db.js",
+    "index.html": "/workshop-registration/index.html",
+    "main.7c5ff8db.js.map": "/workshop-registration/static/js/main.7c5ff8db.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.7c5ff8db.js"
+  ]
+}
