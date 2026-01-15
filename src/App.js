@@ -53,7 +53,7 @@ function App() {
 
     try {
       // ส่งข้อมูลไปยัง Google Sheets
-      const response = await fetch(GOOGLE_SCRIPT_URL, {
+      await fetch(GOOGLE_SCRIPT_URL, {
         method: "POST",
         mode: "no-cors",
         headers: {
